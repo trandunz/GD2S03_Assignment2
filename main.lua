@@ -83,10 +83,10 @@ function TogglePlayerOne()
 end
     
 function CanSplitAnyPile()
-local canSplitAnyPile = true
+local canSplitAnyPile = false
   for key,val in pairs(piles) do
-    if IsValidPileNumber(key) == false then
-      canSplitAnyPile = false;
+    if IsValidPileNumber(key) == true then
+      canSplitAnyPile = true;
     end
   end
   return canSplitAnyPile;
@@ -100,7 +100,7 @@ function GetRandomPile()
     end
   end
   
-  randomIndex = math.random(1, GetTableSize(validPiles));
+  randomIndex = math.random(0, GetTableSize(validPiles) - 1);
   return validPiles[randomIndex];
 end
 
@@ -114,7 +114,7 @@ function GetRandomSplitAmount(_pile)
     end
   end
   
-  randomIndex = math.random(1, GetTableSize(validSplitAmounts));
+  randomIndex = math.random(0, GetTableSize(validSplitAmounts) - 1);
   return validSplitAmounts[randomIndex];
 end
 
@@ -150,8 +150,8 @@ function PlayerVSAIEasyLoop()
   PrintTable(piles);
 
   while (gameOver == false) do
-    pileToSplit = 0;
-    splitAmount = 0;
+    pileToSplit = 1;
+    splitAmount = 1;
     if playerOne == true then
       pileToSplit = GetValidPileNumber();
       splitAmount = GetValidSplitAmount(pileToSplit);
@@ -168,8 +168,9 @@ function PlayerVSAIEasyLoop()
       gameOver = true;
     end
   end
+  
   if playerOne == true then
-    print("Player Two Wins")
+    print("Easy AI Wins")
   else 
     print("Player One Wins")
   end
