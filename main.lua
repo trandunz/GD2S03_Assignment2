@@ -1,123 +1,21 @@
-local Piles = require("Piles");
-local gameOver = false;
-local playerOne = true;
+-- Bachelor of Software Engineering 
+-- Media Design School 
+-- Auckland 
+-- New Zealand 
+-- (c) Media Design School
+-- File Name : Main.lua 
+-- Description : Main Implementation File
+-- Author : William Inman
+-- Mail : william.inman@mds.ac.nz
 
-function TogglePlayerOne()
-  if playerOne == true then
-    playerOne = false;
-  else
-    playerOne = true;
-  end
-end
+local PlayerVSPlayer = require("PlayerVSPlayer");
+local EasyAI = require("EasyAI");
+local MediumAI = require("MediumAI");
+local HardAI = require("HardAI");
 
-function PlayerVSPlayerLoop()
-  io.write("Starting Pile Size: ");
-  startingPile = tonumber(io.read());
-  Piles.AddPile(startingPile);
-  Piles.PrintPiles();
-
-  while (gameOver == false) do
-    pileToSplit = Piles.GetValidPileNumber();
-    splitAmount = Piles.GetValidSplitAmount(pileToSplit);
-
-    Piles.SplitPile(pileToSplit, splitAmount);
-    Piles.PrintPiles();
-    TogglePlayerOne();
-  
-    if Piles.CanSplitAnyPile() == false then
-      gameOver = true;
-    end
-  end
-  if playerOne == true then
-    print("Player Two Wins")
-  else 
-    print("Player One Wins")
-  end
-end
-
-function PlayerVSAIEasyLoop()
-  io.write("Starting Pile Size: ");
-  startingPile = tonumber(io.read());
-  Piles.AddPile(startingPile);
-  Piles.PrintPiles();
-
-  while (gameOver == false) do
-    pileToSplit = 0;
-    splitAmount = 0;
-    if playerOne == true then
-      pileToSplit = Piles.GetValidPileNumber();
-      splitAmount = Piles.GetValidSplitAmount(pileToSplit);
-    else
-      pileToSplit = Piles.GetRandomPile();
-      splitAmount = Piles.GetRandomSplitAmount(pileToSplit);
-    end
-
-    Piles.SplitPile(pileToSplit, splitAmount);
-    Piles.PrintPiles();
-    TogglePlayerOne();
-  
-    if Piles.CanSplitAnyPile() == false then
-      gameOver = true;
-    end
-  end
-  
-  if playerOne == true then
-    print("Easy AI Wins")
-  else 
-    print("Player One Wins")
-  end
-end
-
-function PlayerVSAIMediumLoop()
-  io.write("Starting Pile Size: ");
-  startingPile = tonumber(io.read());
-  Piles.AddPile(startingPile);
-  Piles.PrintPiles();
-
-  while (gameOver == false) do
-    pileToSplit = Piles.GetValidPileNumber();
-    splitAmount = Piles.GetValidSplitAmount(pileToSplit);
-
-    Piles.SplitPile(pileToSplit, splitAmount);
-    Piles.PrintPiles();
-    TogglePlayerOne();
-  
-    if Piles.CanSplitAnyPile() == false then
-      gameOver = true;
-    end
-  end
-  if playerOne == true then
-    print("Player Two Wins")
-  else 
-    print("Player One Wins")
-  end
-end
-
-function PlayerVSAIHardLoop()
-  io.write("Starting Pile Size: ");
-  startingPile = tonumber(io.read());
-  Piles.AddPile(startingPile);
-  Piles.PrintPiles();
-
-  while (gameOver == false) do
-    pileToSplit = Piles.GetValidPileNumber();
-    splitAmount = Piles.GetValidSplitAmount(pileToSplit);
-
-    Piles.SplitPile(pileToSplit, splitAmount);
-    Piles.PrintPiles();
-    TogglePlayerOne();
-  
-    if Piles.CanSplitAnyPile() == false then
-      gameOver = true;
-    end
-  end
-  if playerOne == true then
-    print("Player Two Wins")
-  else 
-    print("Player One Wins")
-  end
-end
-
+--
+--  Prints out the menu options
+--
 function PrintMenuOptions()
   print("");
   print("Grundys Game By Will Inman");
@@ -128,6 +26,9 @@ function PrintMenuOptions()
   print("D : Player VS AI (hard)");
 end
 
+--
+--  Checks if the specified input is valid
+--
 function IsValidMenuSelection(_input)
   if _input == "A" 
   or _input == "a" 
@@ -143,36 +44,57 @@ function IsValidMenuSelection(_input)
   end
 end
 
+--
+--  Initial menu selection loop. 
+--  Prints the menu options and waits for valid option selection
+--
 function MenuSelection()
   local validSelection = false;
   local input;
+  
+  -- Loop while input is invalid
   while (validSelection == false) do
+    -- Print Menu Options
     PrintMenuOptions();
+    
+    -- Grab player input
     input = io.read();
+    
+    -- Check if input is valid
     validSelection = IsValidMenuSelection(input);
   end
   return input;
 end
 
+--
+--  Main thread function
+--
 function Main()
+  -- Print and grab menu input
   local menuSelection = MenuSelection();
   
+  -- If menu input is "a" then start player vs player game loop
   if menuSelection == "A" 
   or menuSelection == "a" then
-      PlayerVSPlayerLoop();
+    PlayerVSPlayer.GameLoop();
   
+    -- If menu input is "b" then start easyAI vs player game loop
   elseif menuSelection == "B" 
   or menuSelection == "b" then
-    PlayerVSAIEasyLoop();
+    EasyAI.GameLoop();
   
+    -- If menu input is "c" then start mediumAI vs player game loop
   elseif menuSelection == "C" 
   or menuSelection == "c" then
-    PlayerVSAIMediumLoop();
+    MediumAI.GameLoop();
   
+    -- If menu input is "d" then start hardAI vs player game loop
   elseif menuSelection == "D" 
   or menuSelection == "d" then
-    PlayerVSAIHardLoop();
+    HardAI.GameLoop();
   end
+  
 end
 
+-- Start the main thread
 Main();
